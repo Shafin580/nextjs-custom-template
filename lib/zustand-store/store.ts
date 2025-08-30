@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { getCookie } from "@repo/auth";
+import { getCookie } from "../cookie";
 
 // Define types for your data
 interface UserData {
@@ -50,10 +50,8 @@ interface AuthState {
   token: string | null;
   userData: UserData | null;
   userDetailsData: UserDetailData | null;
-  basicEmployeeInfo: BasicEmployeeInfoProps | null
   setAuth: ({ token, userData }: { token: string; userData: UserData }) => void;
   setUserDetails: ({ userDetailsData }: { userDetailsData: UserDetailData }) => void;
-  setBasicEmployeeInfo: ({ basicEmployeeInfo }: { basicEmployeeInfo: BasicEmployeeInfoProps }) => void;
   updateUserData: (updates: Partial<UserData>) => void;
   clearAuth: () => void;
 }
@@ -65,18 +63,15 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       userData: null,
       userDetailsData: null,
-      basicEmployeeInfo: null,
       setAuth: ({ token, userData }: { token: string; userData: UserData }) =>
         set({ token, userData }),
       setUserDetails: ({ userDetailsData }: { userDetailsData: UserDetailData }) =>
         set({ userDetailsData }),
-      setBasicEmployeeInfo: ({ basicEmployeeInfo }: { basicEmployeeInfo: BasicEmployeeInfoProps }) =>
-        set({ basicEmployeeInfo }),
       updateUserData: (updates: Partial<UserData>) =>
         set((state) => ({
           userData: state.userData ? { ...state.userData, ...updates } : null,
         })),
-      clearAuth: () => set({ token: null, userData: null, userDetailsData: null, basicEmployeeInfo: null }),
+      clearAuth: () => set({ token: null, userData: null, userDetailsData: null }),
     }),
     {
       name: "auth-storage",
